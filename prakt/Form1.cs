@@ -69,6 +69,7 @@ namespace prakt
                 button.MouseUp += new MouseEventHandler(StaticMove);
                 
                 
+                
             }
             else
             {
@@ -110,13 +111,15 @@ namespace prakt
         public void StaticMove(Object sender, MouseEventArgs e)
         {
             Abs();
-            int X1 = end.X - start.X;
-            int Y1 = end.Y - start.Y;
+            int X1;
+            int Y1;
 
             if (e.Button == MouseButtons.Left)
             {
                 Random random = new Random();
                 Button button = (Button)sender;
+                X1 = button.Size.Width;
+                Y1 = button.Size.Height;
                 int n = random.Next(0,2);
                 if(n == 0)
                 {
@@ -143,6 +146,55 @@ namespace prakt
         public void MousPosition(Object sender, MouseEventArgs e)
         {
             this.Text = e.Location.ToString();
+            
+            foreach(var viev in this.Controls)
+            {
+                if (viev is Button)
+                {
+
+                    Button button = (Button)viev;
+                    Point point = button.Location;
+
+                    if(isRound(button, e))
+                    {
+                        if (point.X - 50 < e.X && e.X < point.X)
+                        {
+                            point.X++;
+                            button.Location = point;
+                        }
+                        if (point.X + button.Width + 50 < e.X && e.X > point.X + button.Width + 50)
+                        {
+                            point.X--;
+                            button.Location = point;
+                        }
+                        if (point.Y - 50 < e.Y && e.Y < point.Y)
+                        {
+                            point.Y++;
+                            button.Location = point;
+                        }
+                        if (point.Y + button.Height + 50 < e.Y && e.Y > point.Y + button.Height + 50)
+                        {
+                            point.Y--;
+                            button.Location = point;
+                        }
+                    }
+
+                    
+                }
+            }
+            
+
         }
+
+        private bool isRound(Button button, MouseEventArgs mouse)
+        {
+            if(button.Location.X - 50 > mouse.X || button.Location.X + button.Width + 50 < mouse.X ||
+                button.Location.Y - 50 > mouse.Y || button.Location.Y + button.Height + 50 < mouse.Y)
+            {
+                return true;
+            }
+            return false;
+        }
+
     }
 }
